@@ -3,6 +3,8 @@
 import collections
 from pprint import pprint
 import time
+import os
+import multiprocessing
 
 # named tuple collection created
 Scientists = collections.namedtuple('Scientists', 
@@ -23,14 +25,27 @@ print()
 
 # function to be passed to map, transforming the data
 def transform(entry):
-    print(f'Processing entry {entry.name}...')
+    print(f'Processing with {os.getpid()} on entry {entry.name}...')
     time.sleep(1)
     return {'name':entry.name, 'age':2018-entry.born}
-    print(f'Done processing entry {entry.name}...')
+    print(f'Done processing with {os.getpid()} on entry {entry.name}...')
 
-# map to create new tuple of defaultdicts
+# map to create new tuple of dicts in series
 now = time.time()
 name_and_age = tuple(map(transform, scientists))
+end = time.time()
+print()
+
+print(f'Time to transform data : {end - now:.2f}s')
+print()
+
+pprint(name_and_age)
+print()
+
+# map to create new tuple of dicts in parallel
+pool = multiprocessing.Pool(processes=len(scientists))
+now = time.time()
+name_and_age = tuple(pool.map(transform, scientists))
 end = time.time()
 print()
 
