@@ -2,6 +2,7 @@
 
 import collections
 from pprint import pprint
+import time
 
 # named tuple collection created
 Scientists = collections.namedtuple('Scientists', 
@@ -18,12 +19,22 @@ scientists = (
     Scientists(name='King', born=1961, field='computer science', nobel=True),
 )
 pprint(scientists)
+print()
 
-# reduce function
+# function to be passed to map, transforming the data
 def transform(entry):
+    print(f'Processing entry {entry.name}...')
+    time.sleep(1)
     return {'name':entry.name, 'age':2018-entry.born}
+    print(f'Done processing entry {entry.name}...')
 
 # map to create new tuple of defaultdicts
+now = time.time()
 name_and_age = tuple(map(transform, scientists))
+end = time.time()
 print()
+
+print(f'Time to transform data : {end - now:.2f}s')
+print()
+
 pprint(name_and_age)
